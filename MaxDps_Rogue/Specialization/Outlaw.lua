@@ -55,8 +55,10 @@ local OL = {
 	SepsisAura           = 347037,
 	Flagellation		 = 323654,
 	SerratedBoneSpear	 = 328547,
-	SerratedBoneSpearAura = 324073,
+	SerratedBoneSpearAura= 324073,
 	EchoingReprimand 	 = 323547,
+	Feint				 = 1966,
+	CrimsonVial			 = 185311,
 
 	StealthAura          = 1784,
 	VanishAura           = 11327,
@@ -94,6 +96,9 @@ function Rogue:Outlaw()
 	local inCombat = UnitAffectingCombat("player");
 	local stealthed = IsStealthed();
 	
+	--Health Percent
+	local PlayerHealth = (UnitHealth('player')/UnitHealthMax('player'))*100
+	
 	--RTB Tracker
 	local rollTheBonesBuffCount = 0;
 	if buff[OL.SkullAndCrossbones].up then rollTheBonesBuffCount = rollTheBonesBuffCount + 1; end
@@ -112,7 +117,10 @@ function Rogue:Outlaw()
 					(comboPoints == 5 and buff[OL.ER5].up) or
 					(comboPoints == 6 and buff[OL.ER6].up); 
 
-
+	MaxDps:GlowCooldown(OL.EchoingReprimand, cooldown[OL.EchoingReprimand].ready);
+	MaxDps:GlowCooldown(OL.Feint, cooldown[OL.Feint].ready and not buff[OL.Feint].up);
+	MaxDps:GlowCooldown(OL.CrimsonVial, cooldown[OL.CrimsonVial].ready and PlayerHealth <= 90);
+	
 	if cooldown[OL.RollTheBones].ready and (rollTheBonesBuffCount == 0 or RTB_Reroll) and not debuff[OL.CheapShot].up and not debuff[OL.KidneyShot].up then
 		return OL.RollTheBones;
 	end
@@ -147,10 +155,6 @@ function Rogue:OutlawBuilder()
 	local cooldown = fd.cooldown;
 	local buff = fd.buff;
 	local covenantId = fd.covenant.covenantId;
-		
-	if covenantId == CN.Kyrian and cooldown[OL.EchoingReprimand].ready then
-		return OL.EchoingReprimand;
-	end
 		
 	if buff[OL.Opportunity].up then
 		return OL.PistolShot;
