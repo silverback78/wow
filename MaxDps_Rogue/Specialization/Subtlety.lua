@@ -76,7 +76,7 @@ function Rogue:Subtlety()
 		if buff[SB.SliceAndDice].refreshable and comboPoints >= 3 then
 			return SB.SliceAndDice;
 		end
-		
+				
 		if useFinisher then
 			return SB.Eviscerate;
 		end
