@@ -19,41 +19,44 @@ local NightFae = Enum.CovenantType.NightFae;
 local Kyrian = Enum.CovenantType.Kyrian;
 
 local FR = {
-	Bloodtalons       = 319439,
-	BloodtalonsAura   = 145152,
-	CatForm           = 768,
-	Prowl             = 5215,
-	Starsurge         = 197626,
-	Sunfire           = 197630,
-	TigersFury        = 5217,
-	Rake              = 1822,
-	RakeAura          = 155722,
-	Rip               = 1079,
-	Clearcasting      = 135700,
-	BalanceAffinity   = 197488,
-	ConvokeTheSpirits = 323764,
-	MoonkinForm       = 197625,
-	FerociousBite     = 22568,
-	FeralFrenzy       = 274837,
-	Moonfire          = 155625,
-	BrutalSlash       = 202028,
-	Shred             = 5221,
-	Swipe             = 106785,
-	LunarInspiration  = 155580,
-	HeartOfTheWild    = 319454,
-	Thrash            = 106830,
-	Berserk           = 106951,
-	Incarnation       = 102543,
-	Predator          = 202021,
-	KindredSpirits    = 326434,
-	AdaptiveSwarm     = 325727,
-	AdaptiveSwarmAura = 325733,
-	SavageRoar        = 52610,
-	PrimalWrath       = 285381,
-	Sabertooth        = 202031,
-	RavenousFrenzy    = 323546,
+	Bloodtalons        = 319439,
+	BloodtalonsAura    = 145152,
+	CatForm            = 768,
+	Prowl              = 5215,
+	Starsurge          = 197626,
+	Sunfire            = 197630,
+	TigersFury         = 5217,
+	Rake               = 1822,
+	RakeAura           = 155722,
+	Rip                = 1079,
+	Clearcasting       = 135700,
+	BalanceAffinity    = 197488,
+	ConvokeTheSpirits  = 323764,
+	MoonkinForm        = 197625,
+	FerociousBite      = 22568,
+	FeralFrenzy        = 274837,
+	Moonfire           = 155625,
+	BrutalSlash        = 202028,
+	Shred              = 5221,
+	Swipe              = 106785,
+	LunarInspiration   = 155580,
+	HeartOfTheWild     = 319454,
+	Thrash             = 106830,
+	Berserk            = 106951,
+	Incarnation        = 102543,
+	Predator           = 202021,
+	KindredSpirits     = 326434,
+	AdaptiveSwarm      = 325727,
+	AdaptiveSwarmAura  = 325733,
+	SavageRoar         = 52610,
+	PrimalWrath        = 285381,
+	Sabertooth         = 202031,
+	RavenousFrenzy     = 323546,
+	
+	Regrowth		   = 8936,
+	PredatorySwiftness = 69369,
 
-	SuddenAmbush      = 340698,
+	SuddenAmbush       = 340698,
 
 	-- leggo buffs
 	ApexPredatorsCraving = 339140,
@@ -113,6 +116,12 @@ function Druid:Feral()
 	elseif covenantId == Kyrian then
 		MaxDps:GlowCooldown(FR.KindredSpirits, cooldown[FR.KindredSpirits].ready);
 	end
+
+	MaxDps:GlowCooldown(FR.Regrowth, buff[FR.PredatorySwiftness].up);
+	MaxDps:GlowCooldown(FR.FeralFrenzy, cooldown[FR.FeralFrenzy].ready);
+	MaxDps:GlowCooldown(FR.Thrash, buff[FR.Clearcasting].up);
+	MaxDps:GlowCooldown(FR.Shred, buff[FR.Clearcasting].up);
+	
 
 	if buff[FR.MoonkinForm].up then
 		-- starsurge,if=buff.heart_of_the_wild.up;
@@ -191,13 +200,13 @@ function Druid:Feral()
 	end
 
 	-- feral_frenzy,if=combo_points<3;
-	if talents[FR.FeralFrenzy] and
-		cooldown[FR.FeralFrenzy].ready and
-		energy >= 25 and
-		comboPoints < 3
-	then
-		return FR.FeralFrenzy;
-	end
+	--if talents[FR.FeralFrenzy] and
+	--	cooldown[FR.FeralFrenzy].ready and
+	--	energy >= 25 and
+	--	comboPoints < 3
+	--then
+	--	return FR.FeralFrenzy;
+	--end
 
 	-- rake,target_if=(refreshable|persistent_multiplier>dot.rake.pmultiplier)&druid.rake.ticks_gained_on_refresh>spell_targets.swipe_cat*2-2;
 	if energy >= 35 and debuff[FR.RakeAura].refreshable then
@@ -223,9 +232,9 @@ function Druid:Feral()
 	end
 
 	-- shred,if=buff.clearcasting.up;
-	if buff[FR.Clearcasting].up then
-		return FR.Shred;
-	end
+	--if buff[FR.Clearcasting].up then
+	--	return FR.Shred;
+	--end
 
 	-- rake,target_if=buff.bs_inc.up&druid.rake.ticks_gained_on_refresh>2;
 	if energy >= 35 and buff[Incarnation].up then
@@ -262,9 +271,9 @@ function Druid:FeralBloodtalons()
 	end
 
 	-- thrash_cat,target_if=refreshable&buff.bt_thrash.down&druid.thrash_cat.ticks_gained_on_refresh>8;
-	if debuff[FR.Thrash].refreshable and buff[FR.Thrash].down and Druid:BtBuffDown(FR.Thrash) then
-		return FR.Thrash;
-	end
+	--if debuff[FR.Thrash].refreshable and buff[FR.Thrash].down and Druid:BtBuffDown(FR.Thrash) then
+	--	return FR.Thrash;
+	--end
 
 	-- brutal_slash,if=buff.bt_brutal_slash.down;
 	if talents[FR.BrutalSlash] and
@@ -285,9 +294,9 @@ function Druid:FeralBloodtalons()
 	end
 
 	-- shred,if=buff.bt_shred.down;
-	if Druid:BtBuffDown(FR.Shred) then -- energy >= 40 and
-		return FR.Shred;
-	end
+	--if Druid:BtBuffDown(FR.Shred) then -- energy >= 40 and
+	--	return FR.Shred;
+	--end
 
 	-- swipe_cat,if=buff.bt_swipe.down;
 	if not talents[FR.BrutalSlash] and Druid:BtBuffDown(FR.Swipe) then
@@ -295,9 +304,9 @@ function Druid:FeralBloodtalons()
 	end
 
 	-- thrash_cat,if=buff.bt_thrash.down;
-	if Druid:BtBuffDown(FR.Thrash) then
-		return FR.Thrash;
-	end
+	--if Druid:BtBuffDown(FR.Thrash) then
+	--	return FR.Thrash;
+	--end
 end
 
 function Druid:FeralCooldown()
@@ -329,12 +338,12 @@ function Druid:FeralCooldown()
 	--end
 
 	-- adaptive_swarm,target_if=max:time_to_die*(combo_points=5&!dot.adaptive_swarm_damage.ticking);
-	if covenantId == Necrolord and
-		cooldown[FR.AdaptiveSwarm].ready and
-		not debuff[FR.AdaptiveSwarmAura].up
-	then
-		return FR.AdaptiveSwarm;
-	end
+	--if covenantId == Necrolord and
+	--	cooldown[FR.AdaptiveSwarm].ready and
+	--	not debuff[FR.AdaptiveSwarmAura].up
+	--then
+	--	return FR.AdaptiveSwarm;
+	--end
 end
 
 function Druid:FeralFiller()
@@ -368,7 +377,7 @@ function Druid:FeralFiller()
 	end
 
 	-- shred;
-	return FR.Shred;
+	--return FR.Shred;
 end
 
 function Druid:FeralFinisher()

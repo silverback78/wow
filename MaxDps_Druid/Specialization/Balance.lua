@@ -82,11 +82,7 @@ function Druid:Balance()
 	
 	-- Glow Cooldown Fury of Elune
 	MaxDps:GlowCooldown(BL.FuryOfElune, talents[BL.FuryOfElune] and cooldown[BL.FuryOfElune].ready);
-	
-	-- Glow cooldown Starfall if > 50 astral power and starfall is off CD
-	MaxDps:GlowCooldown(BL.Starfall, lunarPower >= 50 and cooldown[BL.Starfall].ready);
-	
-	
+		
 	-- Refresh Moonfire
 	if debuff[BL.MoonfireAura].refreshable then
 		return BL.Moonfire;
